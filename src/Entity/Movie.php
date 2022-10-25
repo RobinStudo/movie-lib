@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\MovieRepository;
 use DateTimeInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -33,6 +35,18 @@ class Movie
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Category $category = null;
+
+    #[ORM\ManyToOne(inversedBy: 'directedMovies')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Person $director = null;
+
+    #[ORM\ManyToMany(targetEntity: Person::class, inversedBy: 'actedMovies')]
+    private Collection $actors;
+
+    public function __construct()
+    {
+        $this->actors = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -107,6 +121,42 @@ class Movie
     public function setCategory(?Category $category): self
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    public function getDirector(): ?Person
+    {
+        return $this->director;
+    }
+
+    public function setDirector(?Person $director): self
+    {
+        $this->director = $director;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Person>
+     */
+    public function getActors(): Collection
+    {
+        return $this->actors;
+    }
+
+    public function addActor(Person $actor): self
+    {
+        if (!$this->actors->contains($actor)) {
+            $this->actors->add($actor);
+        }
+
+        return $this;
+    }
+
+    public function removeActor(Person $actor): self
+    {
+        $this->actors->removeElement($actor);
 
         return $this;
     }
