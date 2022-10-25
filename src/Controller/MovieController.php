@@ -50,5 +50,15 @@ class MovieController extends AbstractController
 
         return $this->redirectToRoute('movie_list');
     }
+
+    #[Route('/search/{term}', name: 'search')]
+    public function search(string $term): Response
+    {
+        $movies = $this->movieRepository->search($term);
+
+        return $this->render('movie/list.html.twig', [
+            'movies' => $movies,
+        ]);
+    }
 }
 

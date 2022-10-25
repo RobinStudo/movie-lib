@@ -6,14 +6,6 @@ use App\Entity\Movie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @extends ServiceEntityRepository<Movie>
- *
- * @method Movie|null find($id, $lockMode = null, $lockVersion = null)
- * @method Movie|null findOneBy(array $criteria, array $orderBy = null)
- * @method Movie[]    findAll()
- * @method Movie[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- */
 class MovieRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -39,28 +31,33 @@ class MovieRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return Movie[] Returns an array of Movie objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('m')
-//            ->andWhere('m.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('m.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function search(string $term): array
+    {
+        $stmt = $this->createQueryBuilder('m');
 
-//    public function findOneBySomeField($value): ?Movie
-//    {
-//        return $this->createQueryBuilder('m')
-//            ->andWhere('m.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        $stmt->leftJoin('m.director', 'd');
+        $stmt->leftJoin('m.actors', 'a');
+
+        $stmt->where(
+            $stmt->expr()->orX(
+                $stmt->expr()->like('m.title', ':term'),
+                $stmt->expr()->like('m.description', ':term'),
+                $stmt->expr()->like('a.firstname', ':term'),
+                $stmt->expr()->like('a.lastname', ':term'),
+                $stmt->expr()->like('d.firstname', ':term'),
+                $stmt->expr()->like('d.lastname', ':term'),
+            )
+        );
+
+//        $stmt->where('m.title LIKE :term');
+//        $stmt->orWhere('m.description LIKE :term');
+//        $stmt->orWhere('CONCAT(d.firstname, \' \', d.lastname) LIKE :term');
+//        $stmt->orWhere('a.firstname LIKE :term');
+//        $stmt->orWhere('a.lastname LIKE :term');
+
+        $stmt->setParameter('term', '%' . $term . '%');
+
+        $stmt->orderBy('m.title', 'ASC');
+        return $stmt->getQuery()->getResult();
+    }
 }
