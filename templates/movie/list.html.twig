@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Liste de films - {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <h1>Liste de films</h1>
+
+    {% for movie in movies %}
+        <a href="{{ path('movie_view', {id: movie.id}) }}" class="card">
+            <img src="{{ movie.poster }}" alt="{{ movie.title }}">
+            {{ movie.title }}
+        </a>
+    {% else %}
+        <p>Aucun film disponible</p>
+    {% endfor %}
+{% endblock %}

@@ -20,9 +20,10 @@ class MovieController extends AbstractController
     public function list(): Response
     {
         $movies = $this->movieRepository->findBy([], ['title' => 'ASC']);
-        dd($movies);
 
-        return new Response("Liste de films");
+        return $this->render('movie/list.html.twig', [
+            'movies' => $movies,
+        ]);
     }
 
     #[Route('/{id}', name: 'view', requirements: ["id" => "\d+"])]
