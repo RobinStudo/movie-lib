@@ -17,7 +17,7 @@ class Movie
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 80)]
+    #[ORM\Column(length: 60)]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -161,3 +161,6 @@ class Movie
         return $this;
     }
 }
+/*
+ * Changer la longueur du titre du film de 80 a 60
+ */

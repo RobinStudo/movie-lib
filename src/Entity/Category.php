@@ -13,7 +13,7 @@ class Category
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 30)]
+    #[ORM\Column(length: 40)]
     private ?string $name = null;
 
     public function getId(): ?int
