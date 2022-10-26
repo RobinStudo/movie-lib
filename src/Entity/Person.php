@@ -141,4 +141,9 @@ class Person
             array_merge($this->getDirectedMovies()->toArray(), $this->getActedMovies()->toArray())
         );
     }
+
+    public function getDisplayName(): string
+    {
+        return $this->getLastname()." ".$this->getFirstname();
+    }
 }
