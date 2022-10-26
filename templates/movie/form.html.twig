@@ -6,5 +6,29 @@
 
 {% block body %}
     <h1>Ajouter un film</h1>
-    {{ form(form) }}
+    {{ form_start(form) }}
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <h2>Information sur le film</h2>
+                    <div class="container">
+                        {{ form_row(form.title) }}
+                        {{ form_row(form.description) }}
+                        {{ form_row(form.poster) }}
+                        {{ form_row(form.category) }}
+                        {{ form_row(form.releasedAt) }}
+                        {{ form_row(form.isBad) }}
+                        {{ form_row(form.director) }}
+                    </div>
+                </div>
+                <div class="col">
+                    {% form_theme form.actors 'components/theme/form_actors.html.twig' %}
+                    {{ form_label(form.actors) }}
+                    {{ form_errors(form.actors) }}
+                    {{ form_widget(form.actors) }}
+
+                </div>
+            </div>
+        </div>
+    {{ form_end(form) }}
 {% endblock %}

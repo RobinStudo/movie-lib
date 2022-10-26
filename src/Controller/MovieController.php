@@ -7,6 +7,7 @@ use App\Form\MovieType;
 use App\Repository\MovieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -38,7 +39,7 @@ class MovieController extends AbstractController
 
     #[Route('/create', name: 'create')]
     #[Route('/{id}/edit', name: 'edit', requirements: ["id" => "\d+"])]
-    public function form(int $id = null): Response
+    public function form(int $id = null, Request $request): Response
     {
         if($id == NULL) {
             // Create
@@ -49,6 +50,15 @@ class MovieController extends AbstractController
         }
 
         $form = $this->createForm(MovieType::class, $movie);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()) {
+
+            $this->em->persist($movie);
+            $this->em->flush();
+            $this->addFlash("success", "Film bien enregistré");
+            return $this->redirectToRoute("movie_list");
+        }
 
         return $this->renderForm("movie/form.html.twig", ["form" => $form]);
     }

@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MovieRepository::class)]
 class Movie
@@ -17,12 +18,21 @@ class Movie
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\NotBlank(message:"Vous devez saisir un titre")]
     #[ORM\Column(length: 60)]
     private ?string $title = null;
 
+    #[Assert\Length(
+        min: 50,
+        minMessage: "Vous devez saisir au minimum {{ limit }} caractères",
+    )]
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
+    #[Assert\Length(
+        max: 255,
+        maxMessage: "Vous devez saisir moins de  {{ limit }} caractères",
+    )]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $poster = null;
 

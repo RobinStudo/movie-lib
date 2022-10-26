@@ -64,7 +64,8 @@ class MovieType extends AbstractType
                 "multiple" => true,
                 "query_builder" => function(PersonRepository $personRepository) {
                     return $personRepository->createQueryBuilder("p")->orderBy("p.lastname", "ASC");
-                }
+                },
+                "expanded" => true,
             ])
             ->add('save', SubmitType::class, [
                 "label" => "Enregistrer"
